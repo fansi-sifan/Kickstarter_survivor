@@ -117,7 +117,7 @@ In this section, the final model and any supporting qualities should be evaluate
 - _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
 - _Can results found from the model be trusted?_
 
-![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/results.png)
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/result.png)
 
 ![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/rf_imp.png)
 
