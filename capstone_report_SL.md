@@ -44,6 +44,7 @@ There are a couple charateristics needs to be noted:
 
 ### Exploratory Visualization
 First I examined the distribution of outcome to predict, project status. The plot shows the number of projects by their status in each year. It's clear from the plot that the 'canceled' and 'suspended' projects represent a very small portion of the datasets in each year, and removing them from the analysis should not cause selection bias. 
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/state_year.png)
 
 While pledged amount is not included in the predictors as it is not observable at the launch of the project,it's important to understand its relationship with the project status and project goal. The following plot illustrates that successful projects raised more while asked for less, compared to failed projects. 
 ![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/goal_status.png)
@@ -116,59 +117,10 @@ In this section, the final model and any supporting qualities should be evaluate
 - _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
 - _Can results found from the model be trusted?_
 
-Optimization terminated successfully.
-         Current function value: 0.600170
-         Iterations 6
-                           Logit Regression Results                           
-==============================================================================
-Dep. Variable:                  state   No. Observations:               190609
-Model:                          Logit   Df Residuals:                   190572
-Method:                           MLE   Df Model:                           36
-Date:                Mon, 13 Aug 2018   Pseudo R-squ.:                  0.1297
-Time:                        00:26:32   Log-Likelihood:            -1.1440e+05
-converged:                       True   LL-Null:                   -1.3144e+05
-                                        LLR p-value:                     0.000
-===============================================================================================
-                                  coef    std err          z      P>|z|      [0.025      0.975]
------------------------------------------------------------------------------------------------
-goal                           -6.2287      0.069    -90.612      0.000      -6.363      -6.094
-life_days                      -1.3034      0.053    -24.362      0.000      -1.408      -1.199
-prep_days                       1.8486      0.026     71.725      0.000       1.798       1.899
-slug_plor                       1.6692      0.126     13.203      0.000       1.421       1.917
-slug_subj                       0.2987      0.017     17.238      0.000       0.265       0.333
-blurb_plor                      1.4147      0.121     11.644      0.000       1.177       1.653
-blurb_subj                     -0.0235      0.017     -1.362      0.173      -0.057       0.010
-gender_female                   0.3356      0.050      6.649      0.000       0.237       0.434
-gender_male                    -0.1434      0.050     -2.893      0.004      -0.241      -0.046
-gender_mostly_female            0.4490      0.055      8.212      0.000       0.342       0.556
-gender_mostly_male             -0.0688      0.054     -1.268      0.205      -0.175       0.038
-gender_unknown                  0.2531      0.050      5.064      0.000       0.155       0.351
-launch_month_2                  0.1245      0.025      4.917      0.000       0.075       0.174
-launch_month_3                  0.1706      0.025      6.881      0.000       0.122       0.219
-launch_month_4                  0.0847      0.025      3.402      0.001       0.036       0.134
-launch_month_5                  0.0757      0.025      3.068      0.002       0.027       0.124
-launch_month_6                  0.0408      0.025      1.641      0.101      -0.008       0.090
-launch_month_7                 -0.1587      0.024     -6.528      0.000      -0.206      -0.111
-launch_month_8                 -0.1098      0.025     -4.431      0.000      -0.158      -0.061
-launch_month_9                  0.0656      0.025      2.615      0.009       0.016       0.115
-launch_month_10                 0.1270      0.025      5.134      0.000       0.078       0.175
-launch_month_11                 0.1004      0.025      3.986      0.000       0.051       0.150
-launch_month_12                -0.0517      0.028     -1.876      0.061      -0.106       0.002
-category_broad_comics           1.2398      0.035     35.788      0.000       1.172       1.308
-category_broad_crafts          -0.4674      0.038    -12.316      0.000      -0.542      -0.393
-category_broad_dance            1.9088      0.054     35.618      0.000       1.804       2.014
-category_broad_design           1.6045      0.034     47.021      0.000       1.538       1.671
-category_broad_fashion         -0.7141      0.029    -24.605      0.000      -0.771      -0.657
-category_broad_film & video     0.8775      0.021     41.897      0.000       0.836       0.919
-category_broad_food            -0.1135      0.026     -4.339      0.000      -0.165      -0.062
-category_broad_games            0.6375      0.026     24.880      0.000       0.587       0.688
-category_broad_journalism      -0.7694      0.045    -16.971      0.000      -0.858      -0.681
-category_broad_music            0.4412      0.021     21.500      0.000       0.401       0.481
-category_broad_photography      0.3203      0.035      9.179      0.000       0.252       0.389
-category_broad_publishing      -0.2539      0.022    -11.777      0.000      -0.296      -0.212
-category_broad_technology      -0.4170      0.026    -16.310      0.000      -0.467      -0.367
-category_broad_theater          1.6380      0.036     45.054      0.000       1.567       1.709
-===============================================================================================
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/results.png)
+
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/rf_imp.png)
+
 
 
 ### Justification
