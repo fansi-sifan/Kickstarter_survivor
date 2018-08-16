@@ -43,16 +43,16 @@ There are a couple charateristics needs to be noted:
 - "Goal" contains a couple extreme values that are likely to be outliers.
 - Time difference between "created" and "launched" is a proxy of how much time the creator spent on preparing for the campaign; time difference between "deadline" and "launched" indicates the lenghth of fundraising decided by the creator. I will calculate both measures and include them in the model.
 
-        |goal     |life_days |prep_days|slug_plor |slug_subj|blurb_plor|blurb_subj
---------|---------|----------|---------|----------|---------|----------|------------
-count	  |2.4e+05	|241717    |241717   |241717    |241717   |241717    |241717
-mean	  |3.8e+04	|33.6      |43.8     |0.04      |0.17     |0.14      |0.40
-std	  |1.0e+06	|12.8      |114.9    |0.19      |0.28     |0.26      |0.29
-min	  |1.0e-02	|1.0       |0.0      |-1.0      |0.00     |-1.0      |0.0
-25%	  |2.0e+03	|30.0      |2.0      |0.00      |0.00     |0.00      |0.16
-50%	  |5.0e+03	|30.0      |10.0     |0.00      |0.00     |0.10      |0.40
-75%	  |1.3e+04	|35.0      |34.0     |0.00      |0.30     |0.29      |0.59
-max	  |1.0e+08	|91.0      |2313.0   |1.00      |1.00     |1.00      |1.00
+Stats     |goal     |life_days |prep_days|slug_plor |slug_subj|blurb_plor|blurb_subj
+----------|---------|----------|---------|----------|---------|----------|------------
+count	  |2.4e+05  |241717    |241717   |241717    |241717   |241717    |241717
+mean	  |3.8e+04  |33.6      |43.8     |0.04      |0.17     |0.14      |0.40
+std	  |1.0e+06  |12.8      |114.9    |0.19      |0.28     |0.26      |0.29
+min	  |1.0e-02  |1.0       |0.0      |-1.0      |0.00     |-1.0      |0.0
+25%	  |2.0e+03  |30.0      |2.0      |0.00      |0.00     |0.00      |0.16
+50%	  |5.0e+03  |30.0      |10.0     |0.00      |0.00     |0.10      |0.40
+75%	  |1.3e+04  |35.0      |34.0     |0.00      |0.30     |0.29      |0.59
+max	  |1.0e+08  |91.0      |2313.0   |1.00      |1.00     |1.00      |1.00
 
 ### Exploratory Visualization
 First I examined the distribution of outcome to predict, project status. The plot shows the number of projects by their status in each year. It's clear from the plot that the 'canceled' and 'suspended' projects represent a very small portion of the datasets in each year, and removing them from the analysis should not cause selection bias. 
