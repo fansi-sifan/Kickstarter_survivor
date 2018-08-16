@@ -45,7 +45,7 @@ There are a couple charateristics needs to be noted:
 
 Stats     |goal     |life_days |prep_days|slug_plor |slug_subj|blurb_plor|blurb_subj
 ----------|---------|----------|---------|----------|---------|----------|------------
-count	  |2.4e+05  |241717    |241717   |241717    |241717   |241717    |241717
+count	  |241717   |241717    |241717   |241717    |241717   |241717    |241717
 mean	  |3.8e+04  |33.6      |43.8     |0.04      |0.17     |0.14      |0.40
 std	  |1.0e+06  |12.8      |114.9    |0.19      |0.28     |0.26      |0.29
 min	  |1.0e-02  |1.0       |0.0      |-1.0      |0.00     |-1.0      |0.0
@@ -67,13 +67,18 @@ Next I explored patterns of successful projects, whether the rate of success var
 
 
 ### Algorithms and Techniques
-This is a supervised learning problem, and the prediction is a binary outcome, with successful projects coded as "1" and failed projects coded as "0". The exploratory visualization also indicates that the underlying relationship is rougly linear, so logistic algorithms would be suitable for this question. The logit output can also be interpreted as a probability, which is a nice feature to have for predicting the successful rate. 
-
-Categorical variables will be converted to dummies using one-hot-encoding.
-I will also use Random forest and CNN, which are good for both linear and non-linear models.
+This is a supervised learning problem, and the prediction is a binary outcome, with successful projects coded as "1" and failed projects coded as "0". The exploratory visualization also indicates that the underlying relationship is rougly linear, so logistic algorithms would be suitable for this question. The logit output can also be interpreted as a probability, a nice feature to have for predicting the successful rate. 
+​
+Two additional algorithms are also utilized to compare the performance:
+1. Random forest: good for both linear and non-linear models. 
+2. Support Vector Machine: good for large feature sets and non-linear models
+​
+Scaling and normalization techniques are applied to numerical variables before fitting the models. Categorical variables are converted to dummies using one-hot-encoding.
 
 ### Benchmark
-The benchmark model used data on all projects that finished between: 6/18/2012 and 11/9/2012 (Greenberg et al. 2013). The attributes are summarized in the table below:
+The naive predictor, in which we predict every campaign to be successful, has an accuracy score of 0.5415, and an F-1 score of 0.5962. This will serve as the main benchmark model to evaluate the model performance.
+
+Another benchmark model is a similar project from a per-reviewed study. The author used data on all Kickstarter projects that finished between: 6/18/2012 and 11/9/2012 (Greenberg et al. 2013). The attributes used as predictors are slightly different, summarized below:
 ​
 1. Goal in dollars of the project
 2. Project category (eg. Music, or Dance, or Video Game)
@@ -92,45 +97,39 @@ The authors evaluated the performance of radial basis, polynomial and sigmoid ke
 
 
 ## III. Methodology
-_(approx. 3-5 pages)_
-
 ### Data Preprocessing
-A significant part of the analysis will be data cleaning. Key steps would include:
-- check for duplicated projects
-- parsing dates
-- crosswalk location to Metropolitan Statistical Areas and merge with census data.
-- train an algorithm to determin the gender of campaign owner based on the names (and potentially, profile pictures)
-- using natural language processing to classify campagin title and description
-- check for missing values
-- scale and normalizae data
+Key steps to process the data are:
+1. Duplicated projects: the dataset is composed of data from 4 independent crawls on 2015-12-17, 2016-06-15, 2017-02-15 and 2018-02-15. Therefore, duplicated projects are checked and removed.
+2. Outliers: A data point with a feature that is beyond an outlier step outside of the IQR (1.5 times) for that feature is considered abnormal. Observations with at least two abnormal features are removed from the analysis (1.4% of the entire observations)
+3. Data normalization: Log transformation is applied to all numeric varaibles to achieve a normalized distribution
+4. Data scaling: although logistic models and decision trees are not affected by feature scaling, SVM and CNN are still susceptible. min-max scaler is applied to all nummeric variables. 
 
 ### Implementation
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
+
 
 ### Refinement
-In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
-- _Has an initial solution been found and clearly reported?_
-- _Is the process of improvement clearly documented, such as what techniques were used?_
-- _Are intermediate and final solutions clearly reported as the process is improved?_
+Tuning
 
 
 ## IV. Results
-_(approx. 2-3 pages)_
-
 ### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+20% of the dataset is held for testing. The model is trained on the rest of the data, with 190,609 obseravations.
+Accuracy
+Time
+Interpretability
 
 ![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/result.png)
 
-![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/rf_imp.png)
 
+All three models outperfom the accuracy score of the navie predictor (accuracy score of 0.5415, and an F-1 score of 0.5962). The logistic model achieved an accuracy score of 69%, which is very similar to the score published by the peer reviewed study. 
+Random forest outperforms other models when trained on full set by a large margin. 
+Large training sets. 
+
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/rf_imp.png)
+The normalized weights for five most predictive features in the random forests are Goal, Days spent on preparing for the campaign, Polarity of the campaign description, Subjectivity of the campgain description and lastly, Days to raise money. 
+
+
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/lg_params.png)
 
 
 ### Justification
@@ -144,12 +143,11 @@ In this section, your model’s final solution and its results should be compare
 _(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+
 
 ### Reflection
+Interpreting models.
+
 In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
 - _Have you thoroughly summarized the entire process you used for this project?_
 - _Were there any interesting aspects of the project?_
@@ -157,19 +155,11 @@ In this section, you will summarize the entire end-to-end problem solution and d
 - _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
 
 ### Improvement
+1. Image analysis: human face detection in the profile picture
+2. Feature selection:
+3. 
+
 In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
 - _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
 - _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
 - _If you used your final solution as the new benchmark, do you think an even better solution exists?_
-
------------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
