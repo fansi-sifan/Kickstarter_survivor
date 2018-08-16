@@ -57,10 +57,10 @@ max	  |1.0e+08  |91.0      |2313.0   |1.00      |1.00     |1.00      |1.00
 ### Exploratory Visualization
 First I examined the distribution of outcome to predict, project status. The plot shows the number of projects by their status in each year. It's clear from the plot that the 'canceled' and 'suspended' projects represent a very small portion of the datasets in each year, and removing them from the analysis should not cause selection bias. 
 ![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/state_year.png)
-
+​
 While pledged amount is not included in the predictors as it is not observable at the launch of the project,it's important to understand its relationship with the project status and project goal. The following plot illustrates that successful projects raised more while asked for less, compared to failed projects. 
 ![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/goal_status.png)
-
+​
 Next I explored patterns of successful projects, whether the rate of success varies by category, gender and location. The crosstab suggests that projects with certain attributes tend to have higher rate of success, such as being female and located in San Franscisco. 
 
 
@@ -129,7 +129,7 @@ Large training sets.
 The normalized weights for five most predictive features in the random forests are Goal, Days spent on preparing for the campaign, Polarity of the campaign description, Subjectivity of the campgain description and lastly, Days to raise money. 
 
 
-![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/lg_params.png)
+
 
 
 ### Justification
@@ -140,26 +140,16 @@ In this section, your model’s final solution and its results should be compare
 
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
-
-### Free-Form Visualization
-
-
 ### Reflection
-Interpreting models.
+One issue with the Random Forest model is that it's designed to solve the problem of prediction, not parameter estimation. If the model predicts a low success rate of a campaign, it would be helpful to also indicate what attributes are holding back the performance, and how to improve the success rate. While Random Forest does produce featuer importance, it lacks estimation of standard errors on the coefficients. 
 
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+As an experiment, I applied Logistic Regression from the stats package which gives parameter estimations on the same training set. The chart below shows the coefficients of each feature. 
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/lg_params.png)
+
+(discuss regression results)
+
+Overall, I think a 81% accuracy rate meets the expectation of giving people guidance on whether their chance of getting funded successfully. Attributes that are most important to the change of success, namely campaign goal and project description, are easy fix that people can implement to increase their likelihood of success. How well this model translates to other crowdsourcing sites such as Indiegogo however, is in question as different sites might attract very different funders who may have different preferences over certain attributes. 
 
 ### Improvement
-1. Image analysis: human face detection in the profile picture
-2. Feature selection:
-3. 
-
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
+1. Image analysis: another potential attribute to include would be the characterstics of creator's profile image: would presenting a human face increase the chance of getting funded? Does the hue of the image matter? This however, requires significant storage and computing power to implement using Conventional Neural Network. 
+2. Feature selection: PCA is not recommended for datasets containing a mix of continuous and categorical variables. Research has suggested using multiple correspondence analysis for mixed data types. I need more understandings of the techniques before implementing it.
