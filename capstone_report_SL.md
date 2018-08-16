@@ -14,7 +14,8 @@ New ideas need financial resources to succeed, and many seek their initial suppo
 Kickstarter is one of the leading crowd-sourcing platform focusing on early-stage funding for creative entrepreneurship. According to Kickstarter (https://www.kickstarter.com/help/stats), success rates vary across 20% - 60% for different categories. Within each category, there are significant variations in terms of the initial amount seeked, the way the project was presented/described, charateristics of the launcher (gender, city, etc. ), the size of the amount to raise, or even the planned length of the campaign. This project aims to develop a tool to help predict a project's likelihood of success upon its launch. Creators could leverage the predictions to make changes, and potentially increase their likelihood of success.  
 
 ### Metrics
-I will split the data into training and testing set, first train the models on the training set and then evaluate the models by comparing their performance on the testing set. The key evaluation metrics is accuracy score, measures out of all projects, how many could the model correctly classify as success.
+I will split the data into training and testing set, first train the models on the training set and then evaluate the models by comparing their performance on the testing set. The key evaluation metrics is accuracy score, measures out of all projects, how many could the model correctly classify as success. In this specific case, the prediction doesn't have to be either high precision or high recall, so accuracy score or F1-score would suffice. 
+
 
 ## II. Analysis
 
@@ -42,6 +43,17 @@ There are a couple charateristics needs to be noted:
 - "Goal" contains a couple extreme values that are likely to be outliers.
 - Time difference between "created" and "launched" is a proxy of how much time the creator spent on preparing for the campaign; time difference between "deadline" and "launched" indicates the lenghth of fundraising decided by the creator. I will calculate both measures and include them in the model.
 
+      |goal	    |life_days |prep_days|slug_plor |slug_subj|blurb_plor|blurb_subj
+------|---------|----------|---------|----------|---------|----------|------------
+count	|2.4e+05	|241717    |241717   |241717    |241717   |241717    |241717
+mean	|3.8e+04	|33.6      |43.8     |0.04      |0.17     |0.14      |0.40
+std	  |1.0e+06	|12.8      |114.9    |0.19      |0.28     |0.26      |0.29
+min	  |1.0e-02	|1.0       |0.0      |-1.0      |0.00     |-1.0      |0.0
+25%	  |2.0e+03	|30.0      |2.0      |0.00      |0.00     |0.00      |0.16
+50%	  |5.0e+03	|30.0      |10.0     |0.00      |0.00     |0.10      |0.40
+75%	  |1.3e+04	|35.0      |34.0     |0.00      |0.30     |0.29      |0.59
+max	  |1.0e+08	|91.0      |2313.0   |1.00    	|1.00     |1.00      |1.00
+
 ### Exploratory Visualization
 First I examined the distribution of outcome to predict, project status. The plot shows the number of projects by their status in each year. It's clear from the plot that the 'canceled' and 'suspended' projects represent a very small portion of the datasets in each year, and removing them from the analysis should not cause selection bias. 
 ![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/state_year.png)
@@ -55,12 +67,10 @@ Next I explored patterns of successful projects, whether the rate of success var
 
 
 ### Algorithms and Techniques
-This is a supervised learning problem, and the prediction is a dummy, with successful projects coded as "1" and failed projects coded as "0". The exploratory visualization also indicates that the underlying relationship is rougly linear, so logistic algorithms would be suitable for this question. The logit output can also be interpreted as a probability, which is a nice feature to have for predicting the successful rate. 
+This is a supervised learning problem, and the prediction is a binary outcome, with successful projects coded as "1" and failed projects coded as "0". The exploratory visualization also indicates that the underlying relationship is rougly linear, so logistic algorithms would be suitable for this question. The logit output can also be interpreted as a probability, which is a nice feature to have for predicting the successful rate. 
 
-The predictors of this dataset  The sample size is also much larger than the number of predictors. 
-
-- Classification tree
-- CNN
+Categorical variables will be converted to dummies using one-hot-encoding.
+I will also use Random forest and CNN, which are good for both linear and non-linear models.
 
 ### Benchmark
 The benchmark model used data on all projects that finished between: 6/18/2012 and 11/9/2012 (Greenberg et al. 2013). The attributes are summarized in the table below:
