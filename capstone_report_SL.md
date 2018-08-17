@@ -63,6 +63,9 @@ While pledged amount is not included in the predictors as it is not observable a
 ​
 Next I explored patterns of successful projects, whether the rate of success varies by category, gender and location. The crosstab suggests that projects with certain attributes tend to have higher rate of success, such as being female and located in San Franscisco. 
 
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/year_table.png)
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/gender_tables.png)
+![alt text](https://github.com/fansi-sifan/Kickstarter_survivor/blob/master/plots/cat_table.png)
 
 
 
