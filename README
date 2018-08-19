@@ -1,0 +1,13 @@
+
+software:
+python
+
+libraries: 
+scikit-learn - http://scikit-learn.org/
+textblob - https://textblob.readthedocs.io/en/dev/
+gender guesser - https://pypi.org/project/gender-guesser/
+
+
+datasets:
+https://webrobots.io/kickstarter-datasets/
+
