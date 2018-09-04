@@ -1,0 +1,165 @@
+---
+title: "Kickstarter EDA"
+author: "Sifan Liu"
+date: "August 22, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# kickstarter <- read.csv("kickstarter.csv")
+VC <- read.csv("source/pitchbook_msa.csv") %>%
+  mutate(VC_value = rowSums(.[3:8], na.rm = TRUE)) %>% select(-contains("X")) %>%
+  filter(!is.na(cbsa13))
+# xwalk <- read.csv("../../R/xwalk/msa.pop.csv")
+# I5hgc <- read.csv("analysis/source/I5HGC_density.csv")
+I5hgc <- read.csv("source/I5HGC_density.csv")
+# msa100 <- read.csv("../../R/xwalk/top100metros.csv")
+msapop <- read.csv("/Users/Fancy/OneDrive - The Brookings Institution/Classes/code/Xwalk/15 MSA pop.csv")
+load("kickstarter.Rda")
+# source("V:/Sifan/mpp_maps/bubble map.R")
+library('tidyverse')
+```
+
+```{r summary}
+
+kickstarter %>%
+  group_by(launched_year) %>%
+  summarise(count = n())
+
+kickstarter %>%
+  group_by(state) %>%
+  summarise(count = n())
+
+kickstarter %>%
+  filter(state == "successful") %>%
+  summarise(success_pledged = sum(pledged))
+
+kickstarter %>%
+  group_by(top100) %>%
+  summarise(count = n(),
+            total_pledged = sum(pledged))
+
+
+cat <- c("design", "games", "technology", "food", "fashion")
+
+df <- kickstarter %>%
+  filter(state == "successful" | state == "failed") %>%
+  filter(launched_year >=2010 & launched_year <= 2015) %>%
+  filter(category_broad %in% cat) %>%
+  select(location_state, cbsa_name, backers_count, goal, pledged, gender, category_broad, category_name, 
+         state)
+
+
+```
+
+```{r cat}
+ggplot(df, aes(x = goal))+
+  geom_histogram(bins = 30)+ 
+  scale_x_continuous(trans='log10', labels = scales::comma)+
+  labs(caption="Note: X axis transformed to log scale")+
+  theme_minimal()
+
+```
+```{r success rate}
+
+df %>% group_by(category_broad, state) %>%
+  summarise(count = n(),
+            pledged = sum(pledged)) %>%
+  unite(value, count, pledged) %>%
+  spread(state,value) %>%
+  separate(failed, into = c("failed_number", "failed_pledged"), convert = TRUE) %>%
+  separate(successful, c("suc_number", "suc_pledged"), convert = TRUE) %>%
+  mutate(success_rate = suc_number/(failed_number + suc_number),
+         avg_pledged = suc_pledged/suc_number) %>%
+  select(-failed_pledged)
+  
+
+
+```
+```{r gender}
+
+
+
+```
+
+
+```{r msa}
+
+df_msa <- df %>%
+  group_by(cbsa_name, state) %>%
+  summarise(pledged = sum(pledged, na.rm = TRUE),
+            count = n()) %>%
+  gather(var, value, -cbsa_name, -state) %>%
+  unite(state_var, state, var) %>%
+  spread(state_var, value) %>%
+  full_join(xwalk, by = c("cbsa_name" = "CMA_CBSA_name")) %>%
+  rename(CBSA = cbsa) %>%
+  left_join(msa100, by = c("CBSA" = "GEO.id2"))
+
+```
+
+```{r}
+
+df_i5hgc <- df_msa %>%
+  left_join(I5hgc, by = "CBSA") %>%
+  mutate(pc_success_count = successful_count/pop2016,
+         I5HGC = I5HGC_Density * pop2016) %>%
+  filter(!is.na(I5HGC))
+  
+ggplot(data = df_i5hgc, aes(log(successful_pledged), log(I5HGC)))+
+  geom_point()+
+  geom_smooth(method = lm)+
+  # geom_rect(xmin = 11, xmax = 14, ymin = 5,ymax = 12, alpha = 0, color = "red")+
+  ggtitle("Number of high growth firms and Kickstarter funding, 2010 - 2015") +
+  theme_minimal()
+
+# bubble_map(df_i5hgc, "I5HGC_Density", "pc_success_pledged")
+  
+
+```
+
+
+```{r KC }
+
+
+df_KCVC <- df_msa %>% 
+  left_join(VC, by = c("CBSA" = "cbsa13")) %>%
+  group_by(CBSA, pop2016) %>%
+  summarise_if(is.numeric, funs(sum(.,na.rm = TRUE))) %>%
+  left_join(I5hgc, by = "CBSA") %>%
+  mutate(r_KS_VC = successful_pledged/VC_value,
+         pc_success_pledged = successful_pledged/pop2016,
+         pc_VC_value = VC_value/pop2016,
+         I5HGC = I5HGC_Density * pop2016)
+
+df_KCVC$pop2016 <- cut(df_KCVC$pop2016, breaks = c(0,250000,1000000,Inf))
+# write.csv(df_cbsa, "df_cbsa.csv")
+
+ggplot(df_KCVC, aes(log(pc_success_pledged), log(pc_VC_value), color = pop2016))+
+  geom_point()+
+  geom_smooth(method = lm)+
+  # geom_rect(xmin = 11, xmax = 14, ymin = 5,ymax = 12, alpha = 0, color = "red")+
+  ggtitle("Total VC and total pledged amount on Kickstarter, by size of metro, 2010 - 2015") +
+  scale_color_brewer(palette = "Set1", 
+                     name = "2016 population",
+                     labels = c(" < 250 k", "250 k - 1 m", " > 1m"))+
+  theme_minimal()
+
+  
+```
+
+```{r KC/VC ratio, echo=FALSE, fig.width=10}
+
+df_KCVC$size <- cut(df_KCVC$r_KS_VC, breaks = c(0,0.01,0.1,1, Inf))
+
+bubble_map(df_KCVC, "size", "pc_success_pledged")+
+  scale_color_brewer(palette = "Spectral", 
+                     labels = c("below 1%", " 1 - 10%", "10% - 100%", "above 100%"),
+                     name = "Kicksarter/VC investment ratio") +
+  scale_size_continuous(name = "Per capita pleged investment on Kickstarter") +
+  ggtitle("Total pledged investment on Kickstarter/ Total VC investment, Top 100 metro areas, 2010 - 2015")+
+  labs(caption = "Selected Kickstarter categories: design, technology, games, food, fashion")
+```
+
+
