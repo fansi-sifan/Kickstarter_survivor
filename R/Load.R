@@ -85,17 +85,3 @@ union$success <- ifelse(union$state =="successful", 1,0)
 
 # save the results  ======================================================
 save(union, file = "union.Rda")
-
-cat <- union %>% 
-  filter(state != "live") %>%
-  group_by(success, category) %>%
-  summarize(count = n(),
-            mean_goal = mean(goal, na.rm = TRUE),
-            mean_pledged = mean(pledged, na.rm = TRUE),
-            mean_backers_count = mean(backers_count, na.rm = TRUE),
-            median_goal = median(goal, na.rm = TRUE),
-            median_pledged = median(pledged, na.rm = TRUE),
-            median_backers_count = median(backers_count, na.rm = TRUE))
-
-# address
-write.csv(union %>% select(contains("location")), "address.csv")
